@@ -1,0 +1,28 @@
+[
+  {
+    "name":"张三",
+    "phone":"13612345678",
+    "contractNo":"348",
+    "subject":"3",
+    "courseId":1505,
+    "channel":"1",
+    "activityId":"",
+    "status": 200,
+    "message": "成功",
+    "code": 200,
+    "case_type": "success"
+        },
+  {
+    "name":"张三",
+    "phone":"13612345678",
+    "contractNo":"348",
+    "subject":"3",
+    "courseId":1505,
+    "channel":"1",
+    "activityId":"",
+    "status": 200,
+    "message": "成功",
+    "code": 200,
+    "case_type": "fail"
+  }
+]

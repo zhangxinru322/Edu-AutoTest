@@ -1,0 +1,22 @@
+[
+  {
+    "name": "课设",
+    "subject": "6",
+    "price": 2333,
+    "applicablePerson": "1",
+    "status": 200,
+    "message": "成功",
+    "code": 200,
+    "case_type": "success"
+  },
+  {
+    "name": "俄语",
+    "subject": "6",
+    "price": 333,
+    "applicablePerson": "1",
+    "status": 200,
+    "message": "失败",
+    "code": 401,
+    "case_type": "fail"
+  }
+]
