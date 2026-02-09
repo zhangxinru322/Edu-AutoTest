@@ -1,21 +1,52 @@
-#课程接口文档封装
 import requests
-import config
+from api.login import LoginAPI
+from config.config import BASE_URL, HEADERS
 
 class CourseAPI:
-    #初始化
-    def __init__(self):
-        self.url_add_course=config.BASE_URL + "/api/clues/course"
-        self.url_select_course = config.BASE_URL + "/api/clues/course/list"
+    def __init__(self, with_token=True):
+        # 只在这里创建一次session，全程复用
+        self.session = requests.Session()
+        self.session.headers.update(HEADERS)
+        print(f"CourseAPI.__init__ session ID: {id(self.session)}")
 
-    #添加课程
-    def add_course(self,test_data,token):
-        return requests.post(url=self.url_add_course,headers={"Authorization":token},json=test_data,verify=False)
-    #查询课程列表
-    def select_course(self,test_data,token):
-        return requests.get(url=self.url_select_course + f"/{test_data}",headers={"Authorization":token},json=test_data,verify=False)
-    def update_course(self,test_data,token):
-        return requests.put(url=self.url_add_course,headers={"Authorization":token},json=test_data,verify=False)
-    #删除课程
-    def delete_course(self,course_id,token):
-        return requests.delete(url=self.url_add_course + f"/{course_id}",headers={"Authorization":token},verify=False)
+        self.url_add_course = BASE_URL + "/api/clues/course"
+        self.url_select_course = BASE_URL + "/api/clues/course/list"
+
+        if with_token:
+            login_api = LoginAPI()
+            token = login_api.get_token(test_data=None, session=self.session)
+            print(f"CourseAPI 拿到token后的session ID: {id(self.session)}")
+
+            if token:
+                self.session.headers["Authorization"] = f"Bearer {token}"
+
+    def add_course(self, test_data):
+        print(f"CourseAPI.add_course session ID: {id(self.session)}")
+        return self.session.post(
+            url=self.url_add_course,
+            json=test_data,
+            verify=False
+        )
+
+    def select_course(self, test_data):
+        print(f"CourseAPI.select_course session ID: {id(self.session)}")
+        return self.session.get(
+            url=self.url_select_course + f"/{test_data}",
+            json=test_data,
+            verify=False
+        )
+
+    def update_course(self, test_data):
+        print(f"CourseAPI.update_course session ID: {id(self.session)}")
+        return self.session.put(
+            url=self.url_add_course,
+            json=test_data,
+            verify=False
+        )
+
+    def delete_course(self, course_id):
+        print(f"CourseAPI.delete_course session ID: {id(self.session)}")
+        return self.session.delete(
+            url=self.url_add_course + f"/{course_id}",
+            verify=False
+        )

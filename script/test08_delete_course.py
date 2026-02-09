@@ -8,26 +8,14 @@ class TestDeleteCourseAPI:
     TOKEN = None
     #前置条件
     def setup_method(self):
-        self.api_login = LoginAPI()
-        self.api_course = CourseAPI()
-        #登录成功
-        #获取验证码
-        res_code = self.api_login.get_verify_code()
-        #登录
-        login_data = {
-            "username": "admin",
-            "password": "HM_2023_test",
-            "code": "2",
-            "uuid": res_code.json().get("uuid")
-        }
-        res_login = self.api_login.login(test_data=login_data)
-        TestDeleteCourseAPI.TOKEN = res_login.json().get("token")
+        pass
     #后置条件
     def teardown(self):
         pass
     #课程删除成功
-    def test01_delete_course_success(self,):
-        res_course = self.api_course.delete_course(course_id=110,token=TestDeleteCourseAPI.TOKEN)
+    def test01_delete_course_success(self):
+        self.course_api = CourseAPI(with_token=True)
+        res_course = self.course_api.delete_course(course_id=110)
         print(res_course.json())
         #断言
         #状态码200
@@ -38,8 +26,9 @@ class TestDeleteCourseAPI:
         assert 200 == res_course.json().get("code")
 
     #课程删除失败（课程id不存在）
-    def test02_delete_course_success(self,):
-        res_course = self.api_course.delete_course(course_id=122222,token=TestDeleteCourseAPI.TOKEN)
+    def test02_delete_course_success(self):
+        self.course_api = CourseAPI(with_token=True)
+        res_course = self.course_api.delete_course(course_id=122222)
         print(res_course.json())
         #断言
         #状态码200
@@ -50,8 +39,9 @@ class TestDeleteCourseAPI:
         assert 500 == res_course.json().get("code")
 
     #课程删除失败（未登录）
-    def test03_delete_course_fail(self,):
-        res_course = self.api_course.delete_course(course_id=110,token="xxx")
+    def test03_delete_course_fail(self):
+        self.course_api = CourseAPI(with_token=False)
+        res_course = self.course_api.delete_course(course_id=110)
         print(res_course.json())
         #断言
         #状态码200

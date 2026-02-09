@@ -3,7 +3,7 @@ from api.login import LoginAPI
 from api.course import CourseAPI
 import pytest
 import json
-import config
+from config.config import BASE_PATH
 
 def build_data(json_file,case_type):
     #定义空列表
@@ -34,29 +34,16 @@ class TestUpdateCourseAPI:
     uuid = None
     #前置条件
     def setup_method(self):
-        #实例化接口
-        self.api_login = LoginAPI()
-        self.api_course = CourseAPI()
-        #获取验证码
-        res_code = self.api_login.get_verify_code()
-        TestUpdateCourseAPI.uuid = res_code.json().get("uuid")
-        #登陆成功
-        login_data={
-            "username":"admin",
-            "password":"HM_2023_test",
-            "code":2,
-            "uuid":TestUpdateCourseAPI.uuid
-        }
-        res_login = self.api_login.login(test_data=login_data)
-        TestUpdateCourseAPI.TOKEN = res_login.json().get("token")
+        pass
     #后置条件
     def teardown(self):
         pass
 
     # 修改课程成功
     @pytest.mark.parametrize("id,name,subject,price,applicablePerson,status,message,code",
-                             build_data(json_file=config.BASE_PATH + "/data/update_course.json", case_type="success"))
+                             build_data(json_file=BASE_PATH + "/data/update_course.json", case_type="success"))
     def test01_update_course_success(self,id,name,subject,price,applicablePerson,status,message,code):
+        self.course_api = CourseAPI(with_token=True)
         update_data = {
             "id":id,
             "name": name,
@@ -64,7 +51,7 @@ class TestUpdateCourseAPI:
             "price": price,
             "applicablePerson":applicablePerson
         }
-        res_update = self.api_course.update_course(test_data=update_data,token=TestUpdateCourseAPI.TOKEN)
+        res_update = self.course_api.update_course(test_data=update_data)
         print(res_update.json())
         #断言
         #状态码200
@@ -75,8 +62,9 @@ class TestUpdateCourseAPI:
         assert code == res_update.json().get("code")
     #修改课程失败（未登录）
     @pytest.mark.parametrize("id,name,subject,price,applicablePerson,status,message,code",
-                             build_data(json_file=config.BASE_PATH + "/data/update_course.json", case_type="fail"))
+                             build_data(json_file=BASE_PATH + "/data/update_course.json", case_type="fail"))
     def test02_update_course_fail(self,id,name,subject,price,applicablePerson,status,message,code):
+        self.course_api = CourseAPI(with_token=False)
         update_data = {
             "id":id,
             "name": name,
@@ -84,7 +72,7 @@ class TestUpdateCourseAPI:
             "price": price,
             "applicablePerson":applicablePerson
         }
-        res_update = self.api_course.update_course(test_data=update_data,token="xxx")
+        res_update = self.course_api.update_course(test_data=update_data)
         print(res_update.json())
         #断言
         #状态码200
