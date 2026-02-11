@@ -5,13 +5,12 @@ import pytest
 import json
 
 class TestDeleteCourseAPI:
-    TOKEN = None
     #前置条件
     def setup_method(self):
         pass
     #后置条件
     def teardown(self):
-        pass
+        self.session.close()
     #课程删除成功
     def test01_delete_course_success(self):
         self.course_api = CourseAPI(with_token=True)

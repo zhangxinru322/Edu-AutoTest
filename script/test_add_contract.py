@@ -1,9 +1,8 @@
 import requests
-from api.login import LoginAPI
 from api.contract import ContractAPI
 import pytest
 import json
-import config
+from config.config import BASE_PATH
 
 def build_data(json_file, case_type=None):
     #创建空列表
@@ -33,30 +32,17 @@ def build_data(json_file, case_type=None):
     return test_data
 
 class TestAddContractAPI:
-    TOKEN = None
     #前置条件
     def setup_method(self):
-        self.api_login = LoginAPI()
-        self.api_contract = ContractAPI()
-        #登录成功
-        #获取验证码
-        res_code = self.api_login.get_verify_code()
-        #登录
-        login_data = {
-            "username": "admin",
-            "password": "HM_2023_test",
-            "code": "2",
-            "uuid": res_code.json().get("uuid")
-        }
-        res_login = self.api_login.login(test_data=login_data)
-        TestAddContractAPI.TOKEN = res_login.json().get("token")
+        self.session = requests.Session()
     #后置条件
     def teardown(self):
-        pass
+        self.session.close()
     #添加合同成功
     @pytest.mark.parametrize("name,phone,contractNo,subject,courseId,channel,activityId,status,message,code",
-                             build_data(json_file=config.BASE_PATH + "/data/contract.json", case_type="success"))
+                             build_data(json_file=BASE_PATH + "/data/contract.json", case_type="success"))
     def test01_add_course_success(self,name,phone,contractNo,subject,courseId,channel,activityId,status,message,code):
+        self.api_contract = ContractAPI(with_token=True)
         contract_data = {
             "name": name,
             "phone": phone,
@@ -64,10 +50,9 @@ class TestAddContractAPI:
             "subject": subject,
             "courseId": courseId,
             "channel": channel,
-            "activityId": activityId,
-            "fileName": TestContract.fileName
+            "activityId": activityId
         }
-        res_contract = self.api_contract.add_contract(test_data=contract_data, token=TestAddContract.token)
+        res_contract = self.api_contract.add_contract(test_data=contract_data)
         print(res_contract.json())
         #断言
         #状态码200
@@ -78,19 +63,19 @@ class TestAddContractAPI:
         assert code == res_contract.json().get("code")
     #添加合同失败（未登录）
     @pytest.mark.parametrize("name,phone,contractNo,subject,courseId,channel,activityId,status,message,code",
-                             build_data(json_file=config.BASE_PATH + "/data/contract.json", case_type="fail"))
+                             build_data(json_file=BASE_PATH + "/data/contract.json", case_type="fail"))
     def test02_add_course_fail(self,name,phone,contractNo,subject,courseId,channel,activityId,status,message,code):
-        acontract_data={
+        self.api_contract = ContractAPI(with_token=False)
+        contract_data={
             "name":name,
             "phone":phone,
             "contractNo":contractNo,
             "subject":subject,
             "courseId":courseId,
             "channel":channel,
-            "activityId":activityId,
-            "fileName":TestContract.fileName
+            "activityId":activityId
         }
-        res_contract=self.api_contract.add_contract(test_data=contract_data,token=TestAddContract.token)
+        res_contract=self.api_contract.add_contract(test_data=contract_data)
         print(res_contract.json())
         # 断言
         # 状态码200

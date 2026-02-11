@@ -6,6 +6,7 @@ class LoginAPI:
         self.url_verify = BASE_URL + "/api/captchaImage"
         self.url_login = BASE_URL + "/api/login"
 
+    #获取验证码
     def get_verify_code(self, session):
         if session is None:
             raise ValueError("session 不能为空！")
@@ -14,25 +15,27 @@ class LoginAPI:
         print(f"LoginAPI.get_verify_code session ID: {id(session)}")
         return uuid
 
+    #登录
     def login(self, test_data, session):
         if session is None:
             raise ValueError("session 不能为空！")
+        #没传测试数据就用默认值
         if test_data is None:
             test_data = LOGIN_DATA.copy()
-
         uuid = self.get_verify_code(session)
+        #给登录参数添加uuid字段
         test_data["uuid"] = uuid
-
         res_login = session.post(url=self.url_login, json=test_data, verify=False)
         print(f"LoginAPI.login session ID: {id(session)}")
         return res_login
 
+    #提取token
     def get_token(self, test_data, session):
         if session is None:
             raise ValueError("session 不能为空！")
         if test_data is None:
             test_data = LOGIN_DATA.copy()
-
+        #调用登录方法，拿到登录响应
         resp = self.login(test_data, session)
         print(f"LoginAPI.get_token session ID: {id(session)}")
         print("登录响应:", resp.json())

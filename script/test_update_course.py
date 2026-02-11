@@ -37,7 +37,7 @@ class TestUpdateCourseAPI:
         pass
     #后置条件
     def teardown(self):
-        pass
+        self.session.close()
 
     # 修改课程成功
     @pytest.mark.parametrize("id,name,subject,price,applicablePerson,status,message,code",

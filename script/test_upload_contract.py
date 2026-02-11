@@ -3,21 +3,26 @@ from api.contract import ContractAPI
 import pytest
 import json
 from config.config import BASE_PATH
+
 #打开合同文件
-file = open(BASE_PATH + "/data/test.pdf","rb")
+def get_contract_file():
+    return open(BASE_PATH + "/data/test.pdf", "rb")
 
 class TestUpLoadContractAPI:
     #前置条件
     def setup_method(self):
-        pass
-    #后置条件
+        self.session = requests.Session()
+
+    # 后置条件
     def teardown(self):
-        pass
+        self.session.close()
 
     #上传合同文件成功
     def test01_add_contract_success(self):
         self.contract_api = ContractAPI(with_token=True)
-        res_upload = self.contract_api.upload_contract(test_data=file)
+        # 重新打开文件，确保内容完整
+        file = get_contract_file()
+        res_upload = self.contract_api.upload_contract(test_data = file)
         print(res_upload.json())
         #断言
         #状态码200
@@ -29,7 +34,8 @@ class TestUpLoadContractAPI:
     #上传合同文件失败（未登录）
     def test02_add_contract_fail(self):
         self.contract_api = ContractAPI(with_token=False)
-        res_upload = self.contract_api.upload_contract(test_data=file)
+        file = get_contract_file()
+        res_upload = self.contract_api.upload_contract(test_data = file)
         print(res_upload.json())
         # 断言
         # 状态码200

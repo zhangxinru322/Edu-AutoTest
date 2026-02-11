@@ -9,7 +9,7 @@ class TestSelectCourseAPI:
         pass
     #后置条件
     def teardown(self):
-        pass
+        self.session.close()
     #查询课程成功
     def test01_select_course_success(self):
         self.course_api = CourseAPI(with_token=True)

@@ -3,6 +3,7 @@ from api.course import CourseAPI
 import pytest
 import json
 from config.config import BASE_PATH
+
 def build_data(json_file, case_type=None):
     #创建空列表
     test_data=[]
@@ -30,10 +31,10 @@ def build_data(json_file, case_type=None):
 class TestAddCourseAPI:
     #前置条件
     def setup_method(self):
-        pass
+        self.session = requests.Session()
     #后置条件
     def teardown(self):
-        pass
+        self.session.close()
     #添加课程成功
     @pytest.mark.parametrize("name,subject,price,applicablePerson,status,message,code",
                              build_data(json_file=BASE_PATH + "/data/course.json", case_type="success"))

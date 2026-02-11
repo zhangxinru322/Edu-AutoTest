@@ -2,7 +2,7 @@ import requests
 from api.login import LoginAPI
 import pytest
 import json
-import config
+from config.config import BASE_PATH
 
 #读取json文件
 def build_data(json_file):
@@ -23,28 +23,28 @@ def build_data(json_file):
             test_data.append((username,password,status,message,code))
     return test_data
 class TestLoginAPI:
-    uuid=None
     #前置条件
     def setup_method(self):
         #实例化接口
         self.api_login=LoginAPI()
-        #获取验证码
-        res_code = self.api_login.get_verify_code()
-        TestLoginAPI.uuid=res_code.json().get("uuid")
+        self.session = requests.Session()
+
     #后置条件
     def teardown(self):
-        pass
-    #登陆
+        self.session.close()
+
+    #登录
     @pytest.mark.parametrize("username,password,status,message,code",
-                             build_data(json_file=config.BASE_PATH + "/data/login.json"))
+                             build_data(json_file=BASE_PATH + "/data/login.json"))
     def test01_login_success(self,username,password,status,message,code):
+        uuid = self.api_login.get_verify_code(session=self.session)
         login_data = {
             "username":username,
             "password": password,
             "code": "2",
-            "uuid": TestLoginAPI.uuid
+            "uuid": uuid
         }
-        res_login = self.api_login.login(test_data=login_data)
+        res_login = self.api_login.login(test_data=login_data, session=self.session)
         print(res_login.status_code)
 
         #断言
