@@ -16,3 +16,5 @@ config = read_yaml()
 BASE_URL = config["base_url"]
 LOGIN_DATA = config["login"]
 HEADERS = config["headers"]
+TEST_CASES = config.get("test_cases", {})
+CONTRACT_CASES = TEST_CASES.get("contract", {})

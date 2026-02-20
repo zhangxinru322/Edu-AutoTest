@@ -7,11 +7,13 @@ class ContractAPI:
     def __init__(self, with_token=True):
         # 只在这里创建一次session，全程复用
         self.session = requests.Session()
-        self.session.headers.update(HEADERS)
+        self.session.headers.update({k:v for k,v in HEADERS.items() if k != "Content-Type"})
+
         print(f"ContractAPI.__init__ session ID: {id(self.session)}")
 
         self.url_upload=BASE_URL + "/api/common/upload"
         self.url_contract=BASE_URL + "/api/contract"
+
         if with_token:
             login_api = LoginAPI()
             token = login_api.get_token(test_data=None, session=self.session)

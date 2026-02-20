@@ -2,7 +2,6 @@ import requests
 from api.login import LoginAPI
 from api.course import CourseAPI
 import pytest
-import json
 
 class TestDeleteCourseAPI:
     #前置条件

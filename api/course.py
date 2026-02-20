@@ -4,7 +4,7 @@ from config.config import BASE_URL, HEADERS
 
 class CourseAPI:
     def __init__(self, with_token=True):
-        # 只在这里创建一次session，全程复用
+        #只在这里创建一次session，后续课程接口复用此会话
         self.session = requests.Session()
         self.session.headers.update(HEADERS)
         print(f"CourseAPI.__init__ session ID: {id(self.session)}")
@@ -14,9 +14,10 @@ class CourseAPI:
 
         if with_token:
             login_api = LoginAPI()
+            #调用登录方法：传入当前session（保证登录和课程接口用同一个会话），获取token
             token = login_api.get_token(test_data=None, session=self.session)
             print(f"CourseAPI 拿到token后的session ID: {id(self.session)}")
-
+            #若拿到token，把token加到session的请求头
             if token:
                 self.session.headers["Authorization"] = f"Bearer {token}"
 

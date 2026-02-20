@@ -1,7 +1,6 @@
 import requests
 from api.contract import ContractAPI
 import pytest
-import json
 from config.config import BASE_PATH
 
 #打开合同文件
