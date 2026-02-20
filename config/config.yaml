@@ -1,0 +1,142 @@
+# 接口域名
+base_url: "https://kdtx-test.itheima.net"
+
+# 登录账号密码（全局配置）
+login:
+  username: "admin"
+  password: "HM_2023_test"
+  code: 2
+
+# 全局请求头
+headers:
+  Content-Type: "application/json"
+
+# 测试用例
+test_cases:
+  #登录模块
+  login:
+    #登陆成功
+    login_success:
+      case_type: "success"
+      username: "admin"
+      password: "HM_2023_test"
+      status: 200
+      message: "成功"
+      code: 200
+    # 登录失败-密码错误
+    login_fail_password:
+      case_type: "fail"
+      username: "admin"
+      password: "123"
+      status: 200
+      message: "错误"
+      code: 500
+    # 登录失败-用户名不存在
+    login_fail_username:
+      case_type: "fail"
+      username: "tom"
+      password: "HM_2023_test"
+      status: 200
+      message: "错误"
+      code: 500
+
+  #课程模块
+  course:
+    # 添加课程成功
+    add_course_success:
+      case_type: "success"
+      name: "课设"
+      subject: "6"
+      price: 2333
+      applicablePerson: "1"
+      status: 200
+      message: "成功"
+      code: 200
+    # 添加课程失败-未登录
+    add_course_fail:
+      case_type: "fail"
+      name: "俄语"
+      subject: "6"
+      price: 333
+      applicablePerson: "1"
+      status: 200
+      message: "失败"
+      code: 401
+
+  #课程修改模块
+  change_course:
+    # 添加课程成功
+    change_course_success:
+      case_type: "success"
+      id: "33wcyahy"
+      name: "软件测试"
+      subject: "6"
+      price: 2333
+      applicablePerson: "1"
+      status: 200
+      message: "成功"
+      code: 200
+    # 添加课程失败-课程id不存在
+    change_course_failed:
+      case_type: "failed"
+      id: 839290
+      name: "课设"
+      subject: "6"
+      price: 333
+      applicablePerson: "1"
+      status: 200
+      message: "失败"
+      code: 500
+    # 添加课程失败-未登录
+    change_course_fail:
+      case_type: "fail"
+      id: 345
+      name: "俄语"
+      subject: "6"
+      price: 333
+      applicablePerson: "1"
+      status: 200
+      message: "失败"
+      code: 401
+
+  #合同模块
+  contract:
+    #添加合同成功
+    add_contract_success:
+      case_type: "success"
+      name: "张三"
+      phone: "13612345678"
+      contractNo: "98038"
+      subject: "3"
+      courseId: 1506
+      channel: "1"
+      activityId: ""
+      status: 200
+      message: "成功"
+      code: 200
+    #添加合同失败-合同号已存在
+    add_contract_failed:
+      case_type: "failed"
+      name: "张三"
+      phone: "13612345678"
+      contractNo: "4444"
+      subject: "3"
+      courseId: 1506
+      channel: "1"
+      activityId: ""
+      status: 200
+      message: "合同号已存在"
+      code: 500
+    #添加合同失败-未登录
+    add_contract_fail:
+      case_type: "fail"
+      name: "张三"
+      phone: "13612345678"
+      contractNo: "33421"
+      subject: "3"
+      courseId: 1506
+      channel: "1"
+      activityId: ""
+      status: 200
+      message: "失败"
+      code: 401
