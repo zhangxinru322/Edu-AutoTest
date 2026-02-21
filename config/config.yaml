@@ -68,7 +68,7 @@ test_cases:
     # 添加课程成功
     change_course_success:
       case_type: "success"
-      id: "33wcyahy"
+      id: 111861
       name: "软件测试"
       subject: "6"
       price: 2333
